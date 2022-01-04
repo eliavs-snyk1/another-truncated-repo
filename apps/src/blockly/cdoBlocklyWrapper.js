@@ -219,6 +219,9 @@ function initializeBlocklyWrapper(blocklyInstance) {
     return this.titleRow;
   };
 
+  blocklyWrapper.Input.prototype.appendField =
+    blocklyWrapper.Input.prototype.appendTitle;
+
   blocklyWrapper.setHSV = function(block, h, s, v) {
     block.setHSV(h, s, v);
   };
