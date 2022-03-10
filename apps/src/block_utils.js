@@ -684,8 +684,8 @@ const STANDARD_INPUT_TYPES = {
     addInput(blockly, block, inputConfig, currentInputRow) {
       if (inputConfig.customOptions && inputConfig.customOptions.assetUrl) {
         currentInputRow
-          .appendTitle(inputConfig.label)
-          .appendTitle(
+          .appendField(inputConfig.label)
+          .appendField(
             new Blockly.FieldImage(
               Blockly.assetUrl(inputConfig.customOptions.assetUrl),
               inputConfig.customOptions.width,
@@ -711,11 +711,11 @@ const STANDARD_INPUT_TYPES = {
       const options = sanitizeOptions(inputConfig.options);
       const dropdown = new blockly.FieldDropdown(options);
       currentInputRow
-        .appendTitle(inputConfig.label)
-        .appendTitle(dropdown, inputConfig.name);
+        .appendField(inputConfig.label)
+        .appendField(dropdown, inputConfig.name);
     },
     generateCode(block, inputConfig) {
-      let code = block.getTitleValue(inputConfig.name);
+      let code = block.getFieldValue(inputConfig.name);
       if (
         inputConfig.type === Blockly.BlockValueType.STRING &&
         !code.startsWith('"') &&
@@ -733,7 +733,7 @@ const STANDARD_INPUT_TYPES = {
       block.getVars = function() {
         return {
           [Blockly.Variables.DEFAULT_CATEGORY]: [
-            block.getTitleValue(inputConfig.name)
+            block.getFieldValue(inputConfig.name)
           ]
         };
       };
@@ -763,8 +763,8 @@ const STANDARD_INPUT_TYPES = {
 
       // Add the variable field to the block
       currentInputRow
-        .appendTitle(inputConfig.label)
-        .appendTitle(new Blockly.FieldVariable(null), inputConfig.name);
+        .appendField(inputConfig.label)
+        .appendField(new Blockly.FieldVariable(null), inputConfig.name);
     },
     generateCode(block, inputConfig) {
       return Blockly.JavaScript.translateVarName(
@@ -780,6 +780,8 @@ const STANDARD_INPUT_TYPES = {
         getFieldInputChangeHandler(blockly, inputConfig.type)
       );
       currentInputRow
+        .appendField(inputConfig.label)
+        .appendField(field, inputConfig.name);
     },
     generateCode(block, inputConfig) {
       let code = block.getTitleValue(inputConfig.name);
@@ -872,7 +874,7 @@ const interpolateInputs = function(
     });
 
     // Finally append the last input's label
-    lastInput.appendTitle(lastInputConfig.label);
+    lastInput.appendField(lastInputConfig.label);
   });
 };
 exports.interpolateInputs = interpolateInputs;
@@ -1122,11 +1124,18 @@ exports.createJsWrapperBlockCreator = function(
               });
             }
           });
-
-          this.appendDummyInput()
-            .appendTitle(toggle, 'toggle')
-            .appendTitle(' ');
-
+          // Use window.appOptions, not global appOptions, because the levelbuilder
+          // block page doesn't have appOptions, but we *do* want to show the mini-toolbox
+          // there
+          if (
+            !window.appOptions ||
+            (window.appOptions.level.miniToolbox &&
+              !window.appOptions.readonlyWorkspace)
+          ) {
+            this.appendDummyInput()
+              .appendField(toggle, 'toggle')
+              .appendField(' ');
+          }
           this.initMiniFlyout(miniToolboxXml);
         }
 
