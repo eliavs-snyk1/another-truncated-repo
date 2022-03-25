@@ -187,15 +187,15 @@ class Slack
   # @param params (optional) [Hash] Any additional Slack API params, such as filename
   def self.upload_file(rooms, path, params={})
     request = RestClient::Request.new(
-      "method" => :post,
-      "url" => "https://slack.com/api/files.upload",
-      "headers" => {
+      :method => :post,
+      :url => "https://slack.com/api/files.upload",
+      :headers => {
         "Content-type" => "multipart/form-data",
         "Authorization" => "Bearer #{SLACK_BOT_TOKEN}"
       },
-      "payload" => {
+      :payload => {
         "multipart" => true,
-        "file" => File.new(path, "rb"),
+        "file" => File.new(path, "r"),
         "channels" => rooms,
       }.merge(params)
     )

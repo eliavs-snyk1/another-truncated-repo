@@ -27,10 +27,10 @@ $starting_message = nil
 # If a thread_ts is specified in options, it will send the message as a threaded response to the parent
 # message identified by that timestamp.
 def sync_write(text, slack=false, options={})
+  puts text
   if $to_slack && slack
     SlackI18n.message(text, options)
   end
-  puts text
 end
 
 def sync_in(slack=false)

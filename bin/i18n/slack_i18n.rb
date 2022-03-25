@@ -34,7 +34,7 @@ class SlackI18n
     Slack.upload_file(TEST_CHANNEL, Rails.root.join("..", "log", filename).to_s,
       {
         "filename" => "Sync In #{Time.now}",
-        "icon_emoji" => ":world_map",
+        "icon_emoji" => ":world_map:",
         "username" => "i18n-dev"
       }
     )
